@@ -12,8 +12,11 @@ def classify(X_train, X_test, y_train, y_test, k):
   prediction = []
   accuracy_score = 0
 
+  print("There are",X_test.shape[0],"testing points and",X_train.shape[0],"training points")
+
   for i in range(X_test.shape[0]):
       cosine_distances = {}
+      #print("Training with test point", i)
 
       for j in range(X_train.shape[0]):
 
@@ -39,10 +42,12 @@ def classify(X_train, X_test, y_train, y_test, k):
       label_sum = sum(predicted_labels)
     
       if label_sum < (k/2):
-        prediction.append('0')
+        prediction.append(0)
       elif label_sum > (k/2):
-        prediction.append('1')
+        prediction.append(1)
    
+  #print(y_test['Occupancy'].values.tolist())
+
   accuracy_score = metrics.accuracy_score(y_test,prediction)
 
   return accuracy_score

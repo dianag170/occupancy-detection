@@ -26,13 +26,16 @@ data['Occupancy'].value_counts()
 count_no_sub = len(data[data['Occupancy']==0])
 count_sub = len(data[data['Occupancy']==1])
 pct_of_no_sub = count_no_sub/(count_no_sub+count_sub)
-print("percentage of no occupancy is", pct_of_no_sub*100)
+#print("percentage of no occupancy is", pct_of_no_sub*100)
 pct_of_sub = count_sub/(count_no_sub+count_sub)
-print("percentage of occupancy", pct_of_sub*100)
+#print("percentage of occupancy", pct_of_sub*100)
 
 
 X_all_data = data.loc[:, data.columns != 'Occupancy']
 y_all_labels = data.loc[:, data.columns == 'Occupancy']
+
+# X_all_data = X_all_data.iloc[:1200,:]
+# y_all_labels = y_all_labels.iloc[:1200,:]
 
 
 fold_index = 0
@@ -40,7 +43,7 @@ k = 3
 accuracy_scores = []
 
 
-kf = KFold(n_splits=3)
+kf = KFold(n_splits=10)
 for train_index, test_index in kf.split(X_all_data):
     
     print("FOLD: ", fold_index)
@@ -64,10 +67,11 @@ for train_index, test_index in kf.split(X_all_data):
     y_os_train=smote_labels_y['Occupancy']
 
     score = classify(X_os_train, X_test, y_os_train, y_test, k)
-    print("Accuracy score wiht K = ",k,"for fold",fold_index,"is",score)
+    accuracy_scores.append(score)
+    print("Accuracy score wiht K =",k,"for fold",fold_index,"is",score)
 
     fold_index += 1
 
 ### Average accuracy score
 accuracy_scores_avg = sum(accuracy_scores) / len(accuracy_scores) 
-print("Average accuracy score for K = ",k,"is:", accuracy_scores_avg)
+print("Average accuracy score for K =",k,"is:", accuracy_scores_avg)
